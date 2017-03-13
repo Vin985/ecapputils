@@ -13,4 +13,8 @@ Imports:
     shiny,
     rhandsontable,
     htmltools,
-    stringr
+    stringr,
+    FRutils,
+    geosphere,
+    rgdal,
+    sp

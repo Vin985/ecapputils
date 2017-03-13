@@ -115,10 +115,10 @@ editCsvServer <- function(path) {
 
     ## Load data
     shiny::observeEvent(input$file, {
-      inFile <- input$file
-      if (is.null(inFile))
+      path <- input$file
+      if (is.null(path))
         return(NULL)
-      loadData(path, info)
+      loadData(path$datapath, info)
     })
 
     ## Handsontable
@@ -232,6 +232,7 @@ editCsvServer <- function(path) {
               lapply(file.path(backupDir,toRemove), file.remove)
             }
             writeData(shiny::isolate(info$previous), bakFile)
+
           } else {
             print("Backup file exists, do not save again")
           }
@@ -242,6 +243,9 @@ editCsvServer <- function(path) {
 
         ## Save and overwrite data
         writeData(d, file.path(destPath, paste0(app, ".csv")))
+        output$saved <- renderText({
+            paste0("File saved on ", Sys.time())
+        })
     })
 
     ## Autosave
@@ -317,7 +321,7 @@ editCsvUI <- function() {
         htmltools::br(),
         shiny::fluidRow(shiny::downloadButton("downloadData", "Download data")),
         htmltools::br(),
-        shiny::fluidRow(shiny::checkboxInput("autosave", "Autosave your progress", value = TRUE)),
+        shiny::fluidRow(shiny::checkboxInput("autosave", "Autosave your progress", value = FALSE)),
         textOutput2("autosave", style = "font-size: 11px; color:blue;"),
         htmltools::div(class = "row", style = "font-size: 11px; color:red;",
              "Warning! the existing file will not be overwritten. Please press on the save button below to apply your changes"),
@@ -328,7 +332,8 @@ editCsvUI <- function() {
         htmltools::br(),
         shiny::fluidRow(shiny::actionButton("saveData", "Save data")),
         htmltools::div(class = "row", style = "font-size: 11px; color:red;",
-             "Warning, the existing file will be overwritten. Download data or create a backup if you want to keep a previous version")
+             "Warning, the existing file will be overwritten. Download data or create a backup if you want to keep a previous version"),
+        textOutput2("saved", style = "font-size: 11px; color:blue;")
       ),
 
       # Application title

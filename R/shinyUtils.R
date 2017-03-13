@@ -28,3 +28,15 @@ textOutput2 <- function(id, content = NULL, container = if (inline) htmltools::s
   }
 }
 
+
+
+launchEvent <- function(type, userInfo) {
+  event <- isolate(userInfo$event)
+  if (is.null(event)) {
+    event <- list()
+    event$value <- 0
+  }
+  event$value <- event$value + 1
+  event$type <- type
+  userInfo$event <- event
+}

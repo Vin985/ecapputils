@@ -177,12 +177,14 @@ checkQueryLanguage <- function(session, userInfo) {
 
 
 changeLanguageHandler <-
-  function(input, output, session, userInfo) {
+  function(input, userInfo, event = NULL) {
     langs <- getAllLanguages()
     lapply(langs, function(x, input, userInfo) {
       shiny::observeEvent(input[[x]], {
-        # updateStore(session, "lang", "fr")
         userInfo$lang <- x
+        if(!is.null(event)) {
+          launchEvent(event, userInfo)
+        }
       })
     }, input, userInfo)
   }

@@ -1,3 +1,5 @@
 exportPattern("^[[:alpha:]]+")
 import(htmltools)
 import(shiny)
+import(sp)
+import(rgdal)
