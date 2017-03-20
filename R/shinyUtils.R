@@ -30,6 +30,22 @@ textOutput2 <- function(id, content = NULL, container = if (inline) htmltools::s
 
 
 
+#' @title Launch an event in a Shiny application. Use only when the application becomes
+#' too complex for simple reactive values
+#'
+#' @param type type of event to launch
+#' @param userInfo a ReactiveValues object containing all the information about the
+#' application
+#'
+#' @description The function will create - or update if it already exists - a list called
+#' event in the userInfo object. The list contains two elements: value which is just a
+#' numerical counter automatically increased when an event is launched and on which
+#' dependencies should be taken and type to describe the type of event launched
+#'
+#' @return
+#' @export
+#'
+#' @examples
 launchEvent <- function(type, userInfo) {
   event <- isolate(userInfo$event)
   if (is.null(event)) {
