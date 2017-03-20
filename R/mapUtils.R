@@ -142,9 +142,11 @@ create.grid <-
   }
 
 
-extractBuffer <- function(shpBounds, shpData, width = 5000) {
-  withBuffer <- gBuffer(shpBounds, width = width)
-  buffer <- gDifference(withBuffer, shpBounds)
+extractBuffer <- function(shpData, buffer = NULL, shpBounds = NULL, width = 5000) {
+  if (is.null(buffer)) {
+    withBuffer <- gBuffer(shpBounds, width = width, byid = TRUE)
+    buffer <- gDifference(withBuffer, shpBounds, byid = TRUE)
+  }
 
   clipped <- gIntersection(shpData, buffer, byid = TRUE)
   clipped
