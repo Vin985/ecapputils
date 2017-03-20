@@ -17,4 +17,6 @@ Imports:
     FRutils,
     geosphere,
     rgdal,
+    rgeos,
     sp
+RoxygenNote: 5.0.1

@@ -7,6 +7,8 @@ library(stringr)
 #' @param path.to.file The path to the language file. The file must be a semi-colon
 #' separated file with one column containing the keys and the others containing the
 #' languages. The first line should contain the title for each column
+#' @param reload Reload language list if the language file has been modified since last
+#' access
 #'
 #' @return a data.frame containing all the language keys
 #' @export
@@ -63,6 +65,16 @@ getAvailableLanguages <- function(lang, data = NULL) {
 
 
 
+#' Title
+#'
+#' @param key
+#' @param lang
+#' @param data
+#'
+#' @return
+#' @export
+#'
+#' @examples
 geti18nValue <- function(key, lang = NULL , data = NULL) {
   # Select language
   lg <- NULL
@@ -176,13 +188,23 @@ checkQueryLanguage <- function(session, userInfo) {
 
 
 
+#' Title
+#'
+#' @param input
+#' @param userInfo
+#' @param event
+#'
+#' @return
+#' @export
+#'
+#' @examples
 changeLanguageHandler <-
   function(input, userInfo, event = NULL) {
     langs <- getAllLanguages()
     lapply(langs, function(x, input, userInfo) {
       shiny::observeEvent(input[[x]], {
         userInfo$lang <- x
-        if(!is.null(event)) {
+        if (!is.null(event)) {
           launchEvent(event, userInfo)
         }
       })
@@ -192,6 +214,16 @@ changeLanguageHandler <-
 
 
 
+#' Title
+#'
+#' @param lang
+#' @param button
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 changeLanguageOutput <- function(lang = NULL, button = TRUE, ...) {
   if (is.null(lang)) {
     langs <- getAllLanguages()
@@ -210,6 +242,16 @@ changeLanguageOutput <- function(lang = NULL, button = TRUE, ...) {
 }
 
 
+#' Title
+#'
+#' @param key
+#' @param lang
+#' @param replace
+#'
+#' @return
+#' @export
+#'
+#' @examples
 i18nInsert <- function(key, lang = NULL, replace){
   str <- geti18nValue(key, lang)
   patterns <- names(replace)

@@ -3,22 +3,24 @@ library(geosphere)
 library(rgdal)
 library(sp)
 
+#' @import sp
+#' @import rgdal
+#' @import FRutils
 #' @export
-#'@title Create a grid using latitude and longitude values.
+#' @title Create a grid using latitude and longitude values.
 #'
-#'
-#'@description This function creates a \code{\link{SpatialPolygonsDataFrame}} grid using the boundaries and cell size selected by the user.
-#'@param x  A \code{\link{data.frame}} containing observations.
-#'@param Latitude A pair of coordinates that identifies the grid northern and southern limits.
-#'@param Longitude A pair of coordinates that identifies the grid eastern and western limits.
-#'@param Grid.size size of the grid cells in km.
-#'@param Clip Should the grid be clipped with a shapefile (\env{TRUE}) or not (\env{FALSE}).
-#'@param clip.shape Shapefile to use to clip the grid if Clip is set to \env{TRUE}
-#'@param projection coordinate reference system ID for the grid.
-#'@details  The projection used for the grid must match the projection used for the dataset if you want to use the grid for \code{\link{effort.grid}} and \code{\link{species.grid}}.
-#'@section Author:Christian Roy
-#'@section note:Large grid with small cell size can take a while to create. Be patient.
-#'@examples
+#' @description This function creates a \code{\link{SpatialPolygonsDataFrame}} grid using the boundaries and cell size selected by the user.
+#' @param x  A \code{\link{data.frame}} containing observations.
+#' @param Latitude A pair of coordinates that identifies the grid northern and southern limits.
+#' @param Longitude A pair of coordinates that identifies the grid eastern and western limits.
+#' @param Grid.size size of the grid cells in km.
+#' @param Clip Should the grid be clipped with a shapefile (\env{TRUE}) or not (\env{FALSE}).
+#' @param clip.shape Shapefile to use to clip the grid if Clip is set to \env{TRUE}
+#' @param projection coordinate reference system ID for the grid.
+#' @details  The projection used for the grid must match the projection used for the dataset if you want to use the grid for \code{\link{effort.grid}} and \code{\link{species.grid}}.
+#' @section Author:Christian Roy
+#' @section note:Large grid with small cell size can take a while to create. Be patient.
+#' @examples
 ###Create a grid between laitude 45N and 54N, and longitude 56W and 70W.
 #'new.grid<-create.grid(Latitude=c(45, 54), Longitude=c(-70, -56), Grid.size=c(25000, 25000), Clip=FALSE, clip.shape=canshp, projection=NULL)
 #'#plot the grid
@@ -109,7 +111,11 @@ create.grid <-
     if (hexgrid) {
       print("creating hexagonal grid")
       grid.pts <- spTransform(grid.pts, CRS(hexproj))
-      grid.shp <- FRutils::hexgrid(grid.pts, convex = TRUE, width = 50000, seed = 111)
+      grid.shp <-
+        FRutils::hexgrid(grid.pts,
+                         convex = TRUE,
+                         width = 50000,
+                         seed = 111)
       names(grid.shp) <- "ID"
       grid.shp <- spTransform(grid.shp, projection)
     } else {
@@ -133,21 +139,10 @@ create.grid <-
           which(to.remove[, i] == T)
         })))
       grid.shp <-
-        grid.shp[grid.shp$ID %in% grid.shp$ID[-remove.vector], ]
+        grid.shp[grid.shp$ID %in% grid.shp$ID[-remove.vector],]
     }
 
     grid.shp@data$CELL.NUM <- seq(1, length(grid.shp), by = 1)
     return(grid.shp)
     #END of the function
   }
-
-
-extractBuffer <- function(shpData, buffer = NULL, shpBounds = NULL, width = 5000) {
-  if (is.null(buffer)) {
-    withBuffer <- gBuffer(shpBounds, width = width, byid = TRUE)
-    buffer <- gDifference(withBuffer, shpBounds, byid = TRUE)
-  }
-
-  clipped <- gIntersection(shpData, buffer, byid = TRUE)
-  clipped
-}
