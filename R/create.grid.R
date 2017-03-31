@@ -114,7 +114,7 @@ create.grid <-
       grid.shp <-
         FRutils::hexgrid(grid.pts,
                          convex = TRUE,
-                         width = 50000,
+                         width = Grid.size[1],
                          seed = 111)
       names(grid.shp) <- "ID"
       grid.shp <- spTransform(grid.shp, projection)

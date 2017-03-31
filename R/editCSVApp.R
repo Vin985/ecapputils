@@ -345,6 +345,15 @@ editCsvUI <- function() {
   ))
 }
 
+#' Title
+#'
+#' @param path 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 editCsvApp <- function(path = NULL, ...) {
   shiny::runApp(list(ui = editCsvUI(), server = editCsvServer(path)), ...)
 }
