@@ -155,7 +155,7 @@ i18nTextOutput <-
            class = "",
            ...) {
     text <- i18nText(id, lang, data)
-    textOutput2(content = text, class = class, ...)
+    textOutput2(content = text, class = class, inline = inline, ...)
   }
 
 

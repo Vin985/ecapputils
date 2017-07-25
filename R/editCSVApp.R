@@ -54,7 +54,10 @@ loadData <- function(path, info) {
     info$previoustime <- format(Sys.time(), format = "%s")
 }
 
-writeData <- function(data, path){
+writeData <- function(data, path, sort = TRUE){
+  if (sort) {
+    data <- data[order(data[, 1]), ]
+  }
   write.csv2(data,
              path,
              row.names = FALSE,
@@ -347,8 +350,8 @@ editCsvUI <- function() {
 
 #' Title
 #'
-#' @param path 
-#' @param ... 
+#' @param path
+#' @param ...
 #'
 #' @return
 #' @export
