@@ -2,15 +2,18 @@ library(shinyjs)
 
 
 CONF_VAR <- "EC_APP_CONF"
+REQUIRED_FIELDS <- c("id", "url", "private")
 
-readAppConf <- function(dir, file = "app.conf") {
+readAppConf <- function(dir, file = "appconf.csv") {
   conf <-
-    read.table(file.path(dir, file),
-               sep = "=",
+    read.csv2(file.path(dir, file),
                stringsAsFactors = FALSE)
-  # create a list of key/values from file
-  res <- as.list(conf$V2)
-  names(res) <- conf$V1
+  missing <- REQUIRED_FIELDS[!REQUIRED_FIELDS %in% names(conf)]
+  if (length(missing) > 0) {
+    stop(sprintf("Error! The following columns are missing from the configuration file: %s", paste(missing, collapse = "; ")))
+  }
+  conf$private <- as.logical(conf$private)
+  res <- setNames(split(conf[, -1], seq(nrow(conf))), conf$id)
   assign(CONF_VAR, res, .GlobalEnv)
   res
 }
@@ -29,7 +32,7 @@ applicationObserver <- function(appId, input, lang) {
     shiny::observeEvent(input[[paste0(appId, "App")]], {
       # create the javascript to redirect to the app with the selected language
       js <-
-        paste0("window.location = '", conf[[appId]],
+        paste0("window.location = '", conf[[appId]]$url,
                "?lang=", lang , "';")
       shinyjs::runjs(js)
     })
