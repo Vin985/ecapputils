@@ -31,11 +31,16 @@ applicationLink <- function(appId, lang, button = TRUE, ...) {
 }
 
 
+parseLanguage <- function(url, lang) {
+  gsub("%LANG%", lang, url)
+}
+
 generateApplicationURL <- function(app, lang, user) {
-  langArg <- paste0("?lang=", lang)
+  langArg <- ifelse(is.null(lang), "", paste0("?lang=", lang))
   userArg <- ifelse(is.null(user), "", paste0("&user=", user$token))
+  url <- parseLanguage(EC_APP_CONF[[app]]$url, lang)
   paste0("window.location = '",
-         EC_APP_CONF[[app]]$url,
+         url,
          langArg,
          userArg,
          "';")
@@ -46,7 +51,7 @@ applicationObserver <- function(appId, input, lang, user) {
       # create the javascript to redirect to the app with the selected language and user info
       js <- generateApplicationURL(appId, lang, user)
       shinyjs::runjs(js)
-    })
+    }, ignoreInit = TRUE)
   }
 
 generateUserStatus <- function(status) {
@@ -65,7 +70,7 @@ isAdmin <- function(user) {
 }
 
 isLogged <- function(user) {
-  return(!is.null(user) && (user$status == EC_STATUS_USER || user$status == EC_STATUS_ADMIN))
+  return(!is.null(user) && !is.na(user$status) && (user$status == EC_STATUS_USER || user$status == EC_STATUS_ADMIN))
 }
 
 getLanguageFromQueryString <- function(query, defaultLang = NULL, availableLanguages = c("fr", "en"), ...) {
