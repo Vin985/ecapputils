@@ -4,10 +4,6 @@ RANDOM_POOL <- c(1:9, letters, toupper(letters))
 
 REQUIRED_FIELDS <- c("id", "url", "private")
 
-EC_STATUS_GUEST <- 0
-EC_STATUS_USER <- 1
-EC_STATUS_ADMIN <- 2
-
 readAppConf <- function(dir, file = "appconf.csv") {
   conf <-
     read.csv2(file.path(dir, file),
@@ -66,10 +62,16 @@ extractUserStatus <- function(str) {
 }
 
 isAdmin <- function(user) {
+  if (is.null(user)) {
+    return(FALSE)
+  }
   return(user$status == EC_STATUS_ADMIN)
 }
 
 isLogged <- function(user) {
+  if (is.null(user)) {
+    return(FALSE)
+  }
   return(!is.null(user) && !is.na(user$status) && (user$status == EC_STATUS_USER || user$status == EC_STATUS_ADMIN))
 }
 

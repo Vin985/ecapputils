@@ -3,7 +3,7 @@ Type: Package
 Title: Compilation of useful functions for EC applications
 Version: 0.1.0
 Author: EC
-Maintainer: Sylvain Christin <sylvain.christin@canada.ca>
+Maintainer: Sylvain Christin <sylvain.christin@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: What license is it under?
@@ -19,5 +19,7 @@ Imports:
     geosphere,
     rgdal,
     rgeos,
-    sp
+    sp,
+    DBI,
+    pool
 RoxygenNote: 5.0.1
