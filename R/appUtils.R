@@ -33,8 +33,8 @@ parseLanguage <- function(url, lang) {
 
 generateApplicationURL <- function(app, lang, user) {
   langArg <- ifelse(is.null(lang), "", paste0("?lang=", lang))
-  nameArg <- ifelse(is.null(lang), "", paste0("?name=", user$name))
   userArg <- ifelse(is.null(user), "", paste0("&user=", generateUserToken(user)))
+  nameArg <- ifelse(is.null(user) || is.null(user$name), "", paste0("?name=", user$name))
   url <- parseLanguage(EC_APP_CONF[[app]]$url, lang)
   paste0("window.location = '",
          url,
@@ -135,6 +135,9 @@ getUserStatusFromQueryString <- function(query, ...) {
 #'
 #' @examples
 getInfoFromQueryString <- function(query, args = c("lang" = getLanguageFromQueryString, "user" = getUserStatusFromQueryString), ...) {
+  if (length(query) == 0) {
+    return(NULL)
+  }
   n <- length(args)
   res <- vector(mode = "list", length = n)
   for (i in 1:n) {
