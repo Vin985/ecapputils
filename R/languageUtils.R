@@ -104,7 +104,7 @@ geti18nValue <- function(key, lang = NULL , data = NULL) {
   idx <- match(key, dat[, 1])
 
   # Keys should be in the first column
-  return(ifelse(is.na(idx), key, dat[[idx, lg]]))
+  return(ifelse(is.na(idx), key, dat[idx, lg]))
 }
 
 
